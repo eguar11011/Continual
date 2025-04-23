@@ -4,7 +4,7 @@
     "backbone": "resnet18",
     "strategy": "finetune",
     "buffer": 1000,
-    "epochs": 3,
+    "epochs": 10,
     "batch": 64,
     "ewc": 0,
     "output": "runs/c10_split5_finetune"
