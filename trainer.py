@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""trainer.py – Orquestador con guardado por‑tarea y métricas completas
+"""trainer.py – Orquestador con guardado por-tarea y métricas completas
 
 Novedades:
 * Guarda **checkpoint** por tarea (`ckpt_t{t}.pt`)
 * Exporta **predicciones y etiquetas** para cada tarea (`preds_task{t}.pt`)
 * Calcula y guarda la **matriz de confusión** en CSV (`confmat_task{t}.csv`)
 * Registra todas las métricas en un `metrics.json` al finalizar
+* (nuevo) Imprime la configuración efectiva y la guarda como `config_used.yaml`
 """
 from __future__ import annotations
 
-import argparse, json
+import argparse, json, csv
 from pathlib import Path
 from typing import List, Dict
-import csv
 
 import yaml
 import torch
@@ -28,16 +28,23 @@ from learner import build_learner
 def _load_config(path: Path) -> Dict:
     ext = path.suffix.lower()
     if ext in {".yml", ".yaml"}:
-        return yaml.safe_load(path.read_text())
-    if ext == ".json":
-        return json.loads(path.read_text())
-    raise ValueError("Config debe ser .json, .yml o .yaml")
+        data = yaml.safe_load(path.read_text()) or {}
+    elif ext == ".json":
+        data = json.loads(path.read_text()) or {}
+    else:
+        raise ValueError("Config debe ser .json, .yml o .yaml")
+    return data
 
 
 def _merge(cli: argparse.Namespace, cfg: Dict):
+    """Fusiona parámetros CLI con el archivo de configuración.
+       Claves YAML con '-' se transforman a '_' para coincidir con argparse."""
     for k, v in cfg.items():
-        if getattr(cli, k, None) == cli.__dict__.get(k):
-            setattr(cli, k, v)
+        k_attr = k.replace("-", "_")
+        if hasattr(cli, k_attr):
+            default_val = cli.__dict__[k_attr]
+            if default_val == getattr(cli, k_attr):
+                setattr(cli, k_attr, v)
     return cli
 
 # ------------------------------------------------------------ confusión
@@ -82,7 +89,6 @@ class Trainer:
             m = {orig: idx for idx, orig in enumerate(task_classes)}
             print(f"\n===== Task {t} | classes {task_classes} =====")
 
-            # evaluación loader fijo
             te_loader = list(self._mapped(self._loader(ds_te, False), m))
             full_loader = self._mapped(self._loader(ds_tr, False), m)
 
@@ -93,7 +99,6 @@ class Trainer:
                     l = self.learner.observe(batch)
                     pbar.set_postfix(loss=f"{l:.4f}")
 
-            # ------- end_task hooks -------
             self.learner.end_task(full_loader)
 
             # ------- evaluación / confusión -------
@@ -115,7 +120,6 @@ class Trainer:
             if self.out:
                 torch.save({"state_dict": self.learner.state_dict()}, self.out / f"ckpt_t{t}.pt")
                 torch.save({"y_true": y_true, "y_pred": y_pred}, self.out / f"preds_task{t}.pt")
-                # confusión a CSV
                 with open(self.out / f"confmat_task{t}.csv", "w", newline="") as f:
                     wr = csv.writer(f)
                     wr.writerow([""] + list(range(self.k)))
@@ -145,7 +149,12 @@ def parse_args():
     p.add_argument("--batch", type=int, default=64)
     p.add_argument("--buffer", type=int, default=1000)
     p.add_argument("--ewc", type=float, default=10.0)
-    p.add_argument("--output", type=Path, default="runs")
+    p.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Ruta base de salida; si se omite se genera automáticamente"
+    )
     p.add_argument("--img-size", type=int, default=224)
     return p.parse_args()
 
@@ -154,22 +163,57 @@ def parse_args():
 def main():
     args = parse_args()
 
+    # Cargar y fusionar configuración externa
     if args.config:
         cfg = _load_config(args.config)
         args = _merge(args, cfg)
 
-    if args.output and not isinstance(args.output, Path):
+    # Ruta de salida automática
+    if args.output is None:
+        args.output = Path(
+            f"runs/{args.strategy}_clases-{args.classes_per_task}_{args.dataset}"
+        )
+    elif not isinstance(args.output, Path):
         args.output = Path(args.output)
     out_dir = args.output
+    out_dir.mkdir(parents=True, exist_ok=True)
 
+    # ---- LOG de configuración efectiva ----
+    cfg_dict = {k: (str(v) if isinstance(v, Path) else v) for k, v in vars(args).items()}
+    cfg_yaml = yaml.safe_dump(cfg_dict, sort_keys=False)
+
+    print("\n======= Configuración efectiva =======")
+    print(cfg_yaml.strip())
+    (out_dir / "config_used.yaml").write_text(cfg_yaml)
+
+    # ---------------------------------------
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    train_tasks, test_tasks = build_split_datasets(args.dataset, args.classes_per_task, img_size=args.img_size)
+    train_tasks, test_tasks = build_split_datasets(
+        args.dataset, args.classes_per_task, img_size=args.img_size
+    )
 
-    model = Classifier(get_backbone(args.backbone), num_classes=args.classes_per_task)
-    learner = build_learner(args.strategy, model, buffer_size=args.buffer, ewc_lambda=args.ewc, lr=1e-3)
+    model = Classifier(
+        get_backbone(args.backbone), num_classes=args.classes_per_task
+    )
+    learner = build_learner(
+        args.strategy,
+        model,
+        buffer_size=args.buffer,
+        ewc_lambda=args.ewc,
+        lr=1e-3
+    )
 
-    Trainer(learner, train_tasks, test_tasks, device, args.classes_per_task, args.epochs, args.batch, out_dir).run()
+    Trainer(
+        learner,
+        train_tasks,
+        test_tasks,
+        device,
+        args.classes_per_task,
+        args.epochs,
+        args.batch,
+        out_dir
+    ).run()
 
 if __name__ == "__main__":
     main()
