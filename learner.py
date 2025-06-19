@@ -151,25 +151,36 @@ class EwcLearner(ReplayLearner):
             loss += add.item()
         return loss
 
-    @torch.no_grad()
+#    @torch.no_grad()
     def end_task(self, dataloader: DataLoader, fisher_samples: int = 1024):
         self.prev_params = {n: p.clone().detach() for n, p in self.model.named_parameters()}
-        self.fisher = defaultdict(torch.zeros_like)
+        self.fisher = {}
         self.model.eval()
+
         cnt = 0
         for x, y in dataloader:
             x, y = x.to(self.device), y.to(self.device)
-            self.model.zero_grad()
+            self.model.zero_grad(set_to_none=True)  # opcional pero más rápido
             loss = Criterion(self.model(x), y)
             loss.backward()
+
             for n, p in self.model.named_parameters():
-                if p.grad is not None:
-                    self.fisher[n] += p.grad.pow(2)
+                if p.grad is None:
+                    continue
+                # ---------- inicialización segura ----------
+                if n not in self.fisher:
+                    self.fisher[n] = torch.zeros_like(p.grad)
+                self.fisher[n] += p.grad.pow(2)
+                # -------------------------------------------
+
             cnt += 1
             if cnt * x.size(0) >= fisher_samples:
                 break
+
+        # normaliza por número de muestras (o por cnt · batch, si prefieres)
         for n in self.fisher:
             self.fisher[n] /= cnt
+
 
 
 # ---------------------------------------------------------------------------
