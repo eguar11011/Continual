@@ -1,0 +1,17 @@
+method: runs/finetune_clases-5_cifar10
+modes:
+  - type: intra        # tareas distintas dentro del mismo ckpt
+    ckpt_task: 1
+    task_a: 0
+    task_b: 1
+    k: 10
+    samples: 1000
+    json_out: sim_finetune_t1_0v1.json
+
+  - type: inter        # ckpt0 vs ckpt1 sobre misma tarea
+    ckpt_a: 0
+    ckpt_b: 1
+    task: 0
+    k: 10
+    samples: 800
+    json_out: sim_finetune_t0v1_task0.json
