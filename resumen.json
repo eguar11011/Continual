@@ -1,0 +1,88 @@
+{
+  "experiments": [
+    {
+      "method": "runs/ewc_clases-5_cifar10",
+      "model_task": 0,
+      "eval_task": 0,
+      "accuracy": 0.8388,
+      "confusion_csv": "runs/ewc_clases-5_cifar10/confmat_model0_on_task0.csv"
+    },
+    {
+      "method": "runs/ewc_clases-5_cifar10",
+      "model_task": 1,
+      "eval_task": 1,
+      "accuracy": 0.8284,
+      "confusion_csv": "runs/ewc_clases-5_cifar10/confmat_model1_on_task1.csv"
+    },
+    {
+      "method": "runs/ewc_clases-5_cifar10",
+      "model_task": 0,
+      "eval_task": 1,
+      "accuracy": 0.0992,
+      "confusion_csv": "runs/ewc_clases-5_cifar10/confmat_model0_on_task1.csv"
+    },
+    {
+      "method": "runs/ewc_clases-5_cifar10",
+      "model_task": 1,
+      "eval_task": 0,
+      "accuracy": 0.0728,
+      "confusion_csv": "runs/ewc_clases-5_cifar10/confmat_model1_on_task0.csv"
+    },
+    {
+      "method": "runs/finetune_clases-5_cifar10",
+      "model_task": 0,
+      "eval_task": 0,
+      "accuracy": 0.8482,
+      "confusion_csv": "runs/finetune_clases-5_cifar10/confmat_model0_on_task0.csv"
+    },
+    {
+      "method": "runs/finetune_clases-5_cifar10",
+      "model_task": 1,
+      "eval_task": 1,
+      "accuracy": 0.9112,
+      "confusion_csv": "runs/finetune_clases-5_cifar10/confmat_model1_on_task1.csv"
+    },
+    {
+      "method": "runs/finetune_clases-5_cifar10",
+      "model_task": 0,
+      "eval_task": 1,
+      "accuracy": 0.0762,
+      "confusion_csv": "runs/finetune_clases-5_cifar10/confmat_model0_on_task1.csv"
+    },
+    {
+      "method": "runs/finetune_clases-5_cifar10",
+      "model_task": 1,
+      "eval_task": 0,
+      "accuracy": 0.0642,
+      "confusion_csv": "runs/finetune_clases-5_cifar10/confmat_model1_on_task0.csv"
+    },
+    {
+      "method": "runs/replay_clases-5_cifar10",
+      "model_task": 0,
+      "eval_task": 0,
+      "accuracy": 0.857,
+      "confusion_csv": "runs/replay_clases-5_cifar10/confmat_model0_on_task0.csv"
+    },
+    {
+      "method": "runs/replay_clases-5_cifar10",
+      "model_task": 1,
+      "eval_task": 1,
+      "accuracy": 0.8322,
+      "confusion_csv": "runs/replay_clases-5_cifar10/confmat_model1_on_task1.csv"
+    },
+    {
+      "method": "runs/replay_clases-5_cifar10",
+      "model_task": 0,
+      "eval_task": 1,
+      "accuracy": 0.0652,
+      "confusion_csv": "runs/replay_clases-5_cifar10/confmat_model0_on_task1.csv"
+    },
+    {
+      "method": "runs/replay_clases-5_cifar10",
+      "model_task": 1,
+      "eval_task": 0,
+      "accuracy": 0.0578,
+      "confusion_csv": "runs/replay_clases-5_cifar10/confmat_model1_on_task0.csv"
+    }
+  ]
+}
