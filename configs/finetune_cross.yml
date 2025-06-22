@@ -1,0 +1,14 @@
+method: runs/finetune_clases-5_cifar10
+
+modes:
+  # Comparación cruzada:
+  #   • Activaciones de la Tarea 0 usando el checkpoint 0
+  #   • vs. Activaciones de la Tarea 1 usando el checkpoint 1
+  - type: cross
+    ckpt_a: 0      # modelo después de la tarea 0
+    task_a: 0
+    ckpt_b: 1      # modelo después de la tarea 1
+    task_b: 1
+    k: 10
+    samples: 1000
+    json_out: sim_ft_cross_t0ck0_vs_t1ck1.json
