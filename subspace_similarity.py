@@ -178,9 +178,9 @@ def main():
 
     # ---------- plan YAML ----------
     if args.config:
-        plan = yaml.safe_load((Path("configs") / f"{args.config}.yml").read_text())
+        plan = yaml.safe_load((Path("Configs_similarity") / f"{args.config}.yml").read_text())
         args.method = Path(plan["method"])
-        cfg = yaml.safe_load((args.method / "config_used.yaml").read_text())
+        cfg = yaml.safe_load((args.method / "config_train_used.yaml").read_text())
 
         layers = (["backbone.conv1", "backbone.layer1", "backbone.layer2",
                    "backbone.layer3", "backbone.layer4"])
