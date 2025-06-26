@@ -1,0 +1,22 @@
+# cross_eval_plan.yml – Lista de experimentos de inferencia cruzada
+# Ejecuta: python infer_cross_task.py --plan cross_eval_plan.yml
+
+experiments:
+  - method: runs/ewc_clases-5_cifar10
+    pairs:
+      - [0, 0]
+      - [1, 1]
+      - [0, 1]   # modelo tarea 0 se evalúa en datos de tarea 1
+      - [1, 0]   # modelo tarea 1 se evalúa en datos de tarea 0
+  - method: runs/finetune_clases-5_cifar10
+    pairs:
+      - [0, 0]
+      - [1, 1]
+      - [0, 1]
+      - [1, 0]
+  - method: runs/replay_clases-5_cifar10
+    pairs:
+      - [0, 0]
+      - [1, 1]
+      - [0, 1]
+      - [1, 0]
