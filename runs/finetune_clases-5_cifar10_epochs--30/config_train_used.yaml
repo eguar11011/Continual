@@ -9,3 +9,5 @@ buffer: 1000
 ewc: 10.0
 output: runs/finetune_clases-5_cifar10_epochs--30
 img_size: 224
+duracion_segundos: 1859.8
+duracion_hms: 0:30:59
