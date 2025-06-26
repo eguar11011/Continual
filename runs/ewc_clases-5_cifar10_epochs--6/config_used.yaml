@@ -1,0 +1,11 @@
+config: ewc_cifar10_5cl.yml
+dataset: cifar10
+classes_per_task: 5
+backbone: resnet18
+strategy: ewc
+epochs: 6
+batch: 64
+buffer: 1000
+ewc: 15.0
+output: runs/ewc_clases-5_cifar10
+img_size: 224
