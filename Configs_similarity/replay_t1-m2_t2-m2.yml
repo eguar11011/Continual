@@ -1,0 +1,17 @@
+method: runs/replay_clases-5_cifar10_epochs--30
+
+modes:
+  # Comparación cruzada:
+  #   • Activaciones de la Tarea 0 usando el checkpoint 0
+  #   • vs. Activaciones de la Tarea 1 usando el checkpoint 1
+  - type: cross
+    ckpt_a: 1     # modelo después de la tarea 0
+    task_a: 0
+    ckpt_b: 1      # modelo después de la tarea 1
+    task_b: 1
+    k: 10
+    samples: 1000
+    json_out: sim_t1ck2_vs_t1ck2d.json
+
+
+# replay_task1-model1_taks1-model2
