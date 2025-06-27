@@ -9,9 +9,9 @@ modes:
     task_a: 0
     ckpt_b: 1      # modelo después de la tarea 1
     task_b: 1
-    k: 10
+    k: 20
     samples: 1000
-    json_out: sim_t1ck2_vs_t1ck2d.json
+    json_out: sim_t1ck2_vs_t2ck2d.json
 
 
 # ewc_task1-model1_taks1-model2

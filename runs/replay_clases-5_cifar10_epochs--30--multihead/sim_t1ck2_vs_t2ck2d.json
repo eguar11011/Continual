@@ -1,0 +1,10 @@
+{
+  "k": 20,
+  "layers": {
+    "backbone.conv1": 0.9841186523437501,
+    "backbone.layer1.1": 0.8494460105895997,
+    "backbone.layer2.1": 0.7960100650787354,
+    "backbone.layer3.1": 0.7310436248779297,
+    "backbone.layer4.1": 0.5713365554809571
+  }
+}
