@@ -54,17 +54,27 @@ def build_loader(cfg: Dict, task_id: int, batch: int):
 
 
 # ───────────────────────────── Hooks y PCA ───────────────────────────────
+# ───────────────────────────── Hooks y PCA ───────────────────────────────
 def _register_hooks(model, layers):
+    # diccionario donde guardaremos activaciones por nombre de capa
     store: Dict[str, List[torch.Tensor]] = {n: [] for n in layers}
 
+    # NUEVA versión del gancho
     def mk(name):
         def hook(_, __, out):
-            store[name].append(out.flatten(1) if out.dim() > 2 else out)
+            # Si la salida es un mapa de activaciones 4-D (B × C × H × W)
+            if out.dim() == 4:
+                # Global Average Pooling  →  B × C
+                out = out.mean(dim=(-2, -1))
+            # (para fully-connected ya viene como B × C y se deja igual)
+            store[name].append(out)
         return hook
 
+    # registramos el gancho en cada módulo indicado en 'layers'
     hds = [m.register_forward_hook(mk(n))
            for n, m in model.named_modules() if n in layers]
     return store, hds
+
 
 
 def _topk_cpu(X: torch.Tensor, k: int):
@@ -97,8 +107,8 @@ def collect_acts(model, loader, layers, n_samples, device):
 
     acts = {}
     for n, lst in store.items():
-        X = torch.cat(lst, 0)[:n_samples]
-        X -= X.mean(0, keepdim=True)
+        X = torch.cat(lst, 0)[:n_samples].cpu()  # mueve a CPU antes
+        X = (X - X.mean(0)) / (X.std(0) + 1e-5)  # centrado + escalado
         acts[n] = X
     return acts
 
@@ -112,6 +122,7 @@ def run_single(args, cfg, device, layers, cache: Dict[int, torch.nn.Module]):
     def load(ck_idx: int):
         if ck_idx in cache:
             return cache[ck_idx]
+        print(ck_idx)
         ck_path = args.method / f"ckpt_t{ck_idx}.pt"
         sd_all = torch.load(ck_path, map_location=device)
         sd = sd_all.get("state_dict", sd_all)
@@ -125,7 +136,7 @@ def run_single(args, cfg, device, layers, cache: Dict[int, torch.nn.Module]):
         return model
 
     # seleccionar par (activaciones A, activaciones B)
-    if args.ckpt_task is not None:                       # --- intra ---
+    if args.ckpt_task is not None:                       # ---collect_acts intra ---
         model = load(args.ckpt_task)
         A = collect_acts(model, build_loader(cfg, args.task_a, args.batch),
                          layers, args.samples, device)
@@ -182,8 +193,12 @@ def main():
         args.method = Path(plan["method"])
         cfg = yaml.safe_load((args.method / "config_train_used.yaml").read_text())
 
-        layers = (["backbone.conv1", "backbone.layer1", "backbone.layer2",
-                   "backbone.layer3", "backbone.layer4"])
+        layers = (["backbone.conv1",
+          "backbone.layer1.1",   # segundo BasicBlock
+          "backbone.layer2.1",
+          "backbone.layer3.1",
+          "backbone.layer4.1"])
+
 
         cache: Dict[int, torch.nn.Module] = {}
         for m in tqdm(plan["modes"], desc="Experimentos"):
