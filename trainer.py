@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""trainer.py – Orquestador con guardado por-tarea y métricas completas
+"""trainer.py – Orquestador CL con clasificador expandible y métricas completas
 
-Novedades:
+Características
+───────────────
+* Clasificador que CRECE por tarea (`ExpandableClassifier`)
 * Guarda **checkpoint** por tarea (`ckpt_t{t}.pt`)
-* Exporta **predicciones y etiquetas** por tarea (`preds_task{t}.pt`)
-* Calcula y guarda la **matriz de confusión** en CSV (`confmat_task{t}.csv`)
-* Registra todas las métricas en un `metrics.json` al finalizar
-* Imprime la configuración efectiva y la guarda como `config_train_used.yaml`
-* ⏱️  Añade la duración total del run (segundos y HH:MM:SS) al YAML
+* Exporta **preds+labels** por tarea (`preds_task{t}.pt`)
+* Matriz de confusión CSV por tarea (`confmat_task{t}.csv`)
+* Evaluación GLOBAL sobre la unión de tareas (`confmat_global.csv`)
+* Registro de métricas en `metrics.json`
+* Guarda la configuración efectiva en `config_train_used.yaml`
+* ⏱️  Añade duración total (seg y HH:MM:SS) al YAML
 """
 from __future__ import annotations
 
@@ -21,8 +24,8 @@ from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
 from datasets import build_split_datasets
-from models import get_backbone, Classifier
 from learner import build_learner
+from models import get_backbone, ExpandableClassifier
 
 CONFIG_DIR = Path(__file__).parent / "Configs_Trainer"
 
@@ -53,7 +56,8 @@ def confusion_matrix(y_true: torch.Tensor, y_pred: torch.Tensor, ncls: int):
 
 # ----------------------------------------------------------------- Trainer
 class Trainer:
-    def __init__(self, learner, train_tasks, test_tasks, device, k, epochs, batch, out: Path | None):
+    def __init__(self, learner, train_tasks, test_tasks,
+                 device, k, epochs, batch, out: Path | None):
         self.learner = learner
         self.train_tasks = train_tasks
         self.test_tasks = test_tasks
@@ -68,35 +72,38 @@ class Trainer:
 
     # --------------------------- internal utils --------------------
     def _loader(self, subset, shuffle: bool):
-        return DataLoader(subset, batch_size=self.batch, shuffle=shuffle, num_workers=2, pin_memory=True)
-
-    def _mapy(self, y, m):
-        return torch.tensor([m[int(lbl)] for lbl in y], dtype=torch.long)
-
-    def _mapped(self, loader, m):
-        for x, y in loader:
-            yield x, self._mapy(y, m)
+        return DataLoader(
+            subset,
+            batch_size=self.batch,
+            shuffle=shuffle,
+            num_workers=2,
+            pin_memory=True,
+        )
 
     # --------------------------- run --------------------------------
     def run(self):
+        # -------- bucle por tarea --------
         for t, (ds_tr, ds_te) in enumerate(zip(self.train_tasks, self.test_tasks)):
-            task_classes = list(range(t * self.k, (t + 1) * self.k))
-            m = {orig: idx for idx, orig in enumerate(task_classes)}
-            print(f"\n===== Task {t} | classes {task_classes} =====")
+            print(f"\n===== Task {t} | clases {list(range(t*self.k, (t+1)*self.k))} =====")
 
-            te_loader = list(self._mapped(self._loader(ds_te, False), m))
-            full_loader = self._mapped(self._loader(ds_tr, False), m)
+            # 1) expandir la cabeza antes de ver la nueva tarea
+            self.learner.add_classes(self.k)
 
+            te_loader   = self._loader(ds_te,  False)
+            full_loader = self._loader(ds_tr,  False)
+
+            # 2) entrenamiento
             for epoch in range(self.epochs):
-                tr_loader = self._mapped(self._loader(ds_tr, True), m)
+                tr_loader = self._loader(ds_tr, True)
                 pbar = tqdm(tr_loader, desc=f"T{t} E{epoch+1}/{self.epochs}")
                 for batch in pbar:
-                    l = self.learner.observe(batch)
-                    pbar.set_postfix(loss=f"{l:.4f}")
+                    loss = self.learner.observe(batch)
+                    pbar.set_postfix(loss=f"{loss:.4f}")
 
+            # 3) finalizar la tarea (p.ej. cálculo de Fisher en EWC)
             self.learner.end_task(full_loader)
 
-            # ------- evaluación / confusión -------
+            # 4) evaluación por tarea
             y_true, y_pred = [], []
             self.learner.model.eval()
             with torch.no_grad():
@@ -108,24 +115,57 @@ class Trainer:
             y_true = torch.cat(y_true)
             y_pred = torch.cat(y_pred)
             acc = (y_true == y_pred).float().mean().item()
-            cm = confusion_matrix(y_true, y_pred, self.k)
 
-            # ------- guardado -------
+            ncls = int(max(y_true.max(), y_pred.max())) + 1
+            cm   = confusion_matrix(y_true, y_pred, ncls)
+
+            # 5) guardado por tarea
             if self.out:
-                torch.save({"state_dict": self.learner.state_dict()}, self.out / f"ckpt_t{t}.pt")
-                torch.save({"y_true": y_true, "y_pred": y_pred}, self.out / f"preds_task{t}.pt")
+                torch.save({"state_dict": self.learner.state_dict()},
+                           self.out / f"ckpt_t{t}.pt")
+                torch.save({"y_true": y_true, "y_pred": y_pred},
+                           self.out / f"preds_task{t}.pt")
                 with open(self.out / f"confmat_task{t}.csv", "w", newline="") as f:
                     wr = csv.writer(f)
-                    wr.writerow([""] + list(range(self.k)))
+                    wr.writerow([""] + list(range(ncls)))
                     for i, row in enumerate(cm.tolist()):
                         wr.writerow([i] + row)
 
             print(f"Accuracy Task {t}: {acc*100:.2f}%")
             self.metrics.append({"task": t, "accuracy": acc})
 
-        # métricas resumen
+        # -------- evaluación GLOBAL (todas las tareas) --------
+        y_true_all, y_pred_all = [], []
+        self.learner.model.eval()
+        with torch.no_grad():
+            for ds_te in self.test_tasks:
+                for x, y in self._loader(ds_te, False):
+                    x = x.to(self.device)
+                    preds = self.learner.model(x).argmax(1).cpu()
+                    y_true_all.append(y)
+                    y_pred_all.append(preds)
+        y_true_all = torch.cat(y_true_all)
+        y_pred_all = torch.cat(y_pred_all)
+        acc_global = (y_true_all == y_pred_all).float().mean().item()
+        n_total    = int(max(y_true_all.max(), y_pred_all.max())) + 1
+        cm_global  = confusion_matrix(y_true_all, y_pred_all, n_total)
+
+        print(f"\n🟢  Accuracy GLOBAL: {acc_global*100:.2f}%")
+        self.metrics.append({"task": "global", "accuracy": acc_global})
+
         if self.out:
-            (self.out / "metrics.json").write_text(json.dumps(self.metrics, indent=2))
+            with open(self.out / "confmat_global.csv", "w", newline="") as f:
+                wr = csv.writer(f)
+                wr.writerow([""] + list(range(n_total)))
+                for i, row in enumerate(cm_global.tolist()):
+                    wr.writerow([i] + row)
+
+            # guardar métricas resumen
+            (self.out / "metrics.json").write_text(
+                json.dumps(self.metrics, indent=2)
+            )
+
+        # -------- impresión resumen --------
         print("\nResumen final:")
         for m in self.metrics:
             print(f"  Task {m['task']}: {m['accuracy']*100:.2f}%")
@@ -157,14 +197,17 @@ def main():
         if not cfg_path.exists():
             cfg_path = CONFIG_DIR / cfg_path
         if not cfg_path.exists():
-            raise FileNotFoundError(f"No se encontró '{args.config}' ni dentro de {CONFIG_DIR}/")
+            raise FileNotFoundError(
+                f"No se encontró '{args.config}' ni dentro de {CONFIG_DIR}/"
+            )
         cfg = _load_config(cfg_path)
         args = _merge(args, cfg)
 
     # ---------- ruta de salida ----------
     if args.output is None:
         args.output = Path(
-            f"runs/{args.strategy}_clases-{args.classes_per_task}_{args.dataset}_epochs--{args.epochs}"
+            f"runs/{args.strategy}_clases-{args.classes_per_task}_"
+            f"{args.dataset}_epochs-{args.epochs}"
         )
     else:
         args.output = Path(args.output)
@@ -180,18 +223,31 @@ def main():
     print("\n======= Configuración efectiva =======")
     print(yaml.safe_dump(cfg_dict, sort_keys=False).strip())
 
-    # ---------- entrenamiento ----------
+    # ---------- preparación de datos ----------
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train_tasks, test_tasks = build_split_datasets(
         args.dataset, args.classes_per_task, img_size=args.img_size
     )
-    model = Classifier(get_backbone(args.backbone), num_classes=args.classes_per_task)
+
+    # ---------- modelo + learner ----------
+    model = ExpandableClassifier(get_backbone(args.backbone), num_classes=0)
     learner = build_learner(
-        args.strategy, model, buffer_size=args.buffer, ewc_lambda=args.ewc, lr=1e-3
+        args.strategy,
+        model,
+        buffer_size=args.buffer,
+        ewc_lambda=args.ewc,
+        lr=1e-3,
     )
+
     Trainer(
-        learner, train_tasks, test_tasks, device,
-        args.classes_per_task, args.epochs, args.batch, out_dir
+        learner,
+        train_tasks,
+        test_tasks,
+        device,
+        args.classes_per_task,
+        args.epochs,
+        args.batch,
+        out_dir,
     ).run()
 
     # ---------- detener cronómetro y guardar duración ----------
@@ -199,12 +255,14 @@ def main():
     cfg_dict["duracion_segundos"] = round(elapsed, 2)
     cfg_dict["duracion_hms"] = str(datetime.timedelta(seconds=int(elapsed)))
 
-    # ---------- guardar YAML final ----------
     (out_dir / "config_train_used.yaml").write_text(
         yaml.safe_dump(cfg_dict, sort_keys=False)
     )
 
-    print(f"\n⏱️  Entrenamiento completado en {cfg_dict['duracion_hms']} ({elapsed:.2f} s)")
+    print(
+        f"\n⏱️  Entrenamiento completado en {cfg_dict['duracion_hms']} "
+        f"({elapsed:.2f} s)"
+    )
 
 if __name__ == "__main__":
     main()

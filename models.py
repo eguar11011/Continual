@@ -93,6 +93,47 @@ class Classifier(nn.Module):
             feats = feats[0]
         return self.head(feats)
 
+# models.py
+class ExpandableClassifier(nn.Module):
+    """Backbone + head lineal que admite crecimiento dinámico de clases."""
+
+    def __init__(self, backbone: nn.Module, num_classes: int = 0):
+        super().__init__()
+        self.backbone = backbone
+        # 1.- Inferir dimensión de salida del backbone
+        if hasattr(backbone, "fc") and isinstance(backbone.fc, nn.Linear):
+            in_feat = backbone.fc.in_features
+            backbone.fc = nn.Identity()
+        elif hasattr(backbone, "embed_dim"):           # ViT-timm
+            in_feat = backbone.embed_dim
+        else:
+            raise AttributeError("No se pudo inferir dimensión del backbone")
+
+        # 2.- Head inicial (puede empezar en 0-clases)
+        self.head = nn.Linear(in_feat, num_classes, bias=True)
+
+    # ─────────────── método clave ────────────────────
+    def add_classes(self, n_new: int):
+        """Añade *n_new* salidas; conserva pesos previos."""
+        if n_new <= 0:
+            return
+        in_feat = self.head.in_features
+        old_out = self.head.out_features
+
+        new_head = nn.Linear(in_feat, old_out + n_new, bias=True)
+        # Copiar pesos/bias antiguos
+        with torch.no_grad():
+            new_head.weight[:old_out].copy_(self.head.weight)
+            new_head.bias  [:old_out].copy_(self.head.bias)
+        self.head = new_head.to(self.head.weight.device)
+
+    # ────────────────────────────────────────────────
+    def forward(self, x):
+        feats = self.backbone(x)
+        if isinstance(feats, tuple):      # p.ej. ViT
+            feats = feats[0]
+        return self.head(feats)
+
 # ----------------------------------------------------------------------------
 # 3.  Multi‑GPU wrapper helper
 # ----------------------------------------------------------------------------

@@ -76,6 +76,7 @@ class FinetuneLearner(nn.Module):
         self.device = device
         self.optim = optim.AdamW(self.model.parameters(), lr=lr)
         self.criterion = Criterion
+        self.lr = lr
 
     def observe(self, batch: Tuple[torch.Tensor, torch.Tensor]):
         x, y = (b.to(self.device) for b in batch)
@@ -88,6 +89,17 @@ class FinetuneLearner(nn.Module):
 
     def end_task(self, *_, **__):
         return  # nada que hacer
+        # ------------------------------------------------------------
+    # ------------------------------------------------------------
+    def add_classes(self, n_new: int):
+        """Expande la cabeza y reinicia el optimizador con los nuevos parámetros."""
+        if n_new <= 0:
+            return
+        self.model.add_classes(n_new)
+
+        # ⚠️ Creamos un optimizador NUEVO que incluya los parámetros recién añadidos
+        self.optim = optim.AdamW(self.model.parameters(), lr=self.lr)
+
 
     @torch.no_grad()
     def evaluate(self, loader: DataLoader):
