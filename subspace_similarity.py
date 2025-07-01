@@ -54,7 +54,6 @@ def build_loader(cfg: Dict, task_id: int, batch: int):
 
 
 # ───────────────────────────── Hooks y PCA ───────────────────────────────
-# ───────────────────────────── Hooks y PCA ───────────────────────────────
 def _register_hooks(model, layers):
     # diccionario donde guardaremos activaciones por nombre de capa
     store: Dict[str, List[torch.Tensor]] = {n: [] for n in layers}
@@ -64,9 +63,8 @@ def _register_hooks(model, layers):
         def hook(_, __, out):
             # Si la salida es un mapa de activaciones 4-D (B × C × H × W)
             if out.dim() == 4:
-                # Global Average Pooling  →  B × C
-                out = out.mean(dim=(-2, -1))
-            # (para fully-connected ya viene como B × C y se deja igual)
+                out = out.permute(0, 2, 3, 1)     # B×H×W×C
+                out = out.reshape(-1, out.size(-1))# (B·H·W) × C
             store[name].append(out)
         return hook
 
@@ -108,7 +106,7 @@ def collect_acts(model, loader, layers, n_samples, device):
     acts = {}
     for n, lst in store.items():
         X = torch.cat(lst, 0)[:n_samples].cpu()  # mueve a CPU antes
-        X = (X - X.mean(0)) / (X.std(0) + 1e-5)  # centrado + escalado
+        X = (X - X.mean(0)) 
         acts[n] = X
     return acts
 
@@ -194,6 +192,7 @@ def main():
         cfg = yaml.safe_load((args.method / "config_train_used.yaml").read_text())
 
         layers = (["backbone.conv1",
+                   "backbone.bn1",
           "backbone.layer1.1",   # segundo BasicBlock
           "backbone.layer2.1",
           "backbone.layer3.1",
