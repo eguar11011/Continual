@@ -207,7 +207,7 @@ def main():
     if args.output is None:
         args.output = Path(
             f"runs/{args.strategy}_clases-{args.classes_per_task}_"
-            f"{args.dataset}_epochs-{args.epochs}"
+            f"{args.dataset}_epochs--{args.epochs}"
         )
     else:
         args.output = Path(args.output)
