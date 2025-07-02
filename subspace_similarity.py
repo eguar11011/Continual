@@ -128,7 +128,22 @@ def run_single(args, cfg, device, layers, cache: Dict[int, torch.nn.Module]):
               if k.startswith("model.")}
         model = Classifier(get_backbone(cfg["backbone"]),
                            cfg["classes_per_task"]).to(device)
-        model.load_state_dict(sd, strict=False)
+            # ───── filtrar tensores con forma incompatible ─────
+        filtered = {}
+        for k, v in sd.items():
+            tgt = model.state_dict().get(k)
+            if tgt is not None and tgt.shape == v.shape:
+                filtered[k] = v
+            else:
+                # opcional: muestra qué se descarta
+                print(f"[load] ignorando {k}  {v.shape} → {None if tgt is None else tgt.shape}")
+
+        missing, unexpected = model.load_state_dict(filtered, strict=False)
+        if missing:
+            print(f"[load] pesos faltantes: {missing}")
+        if unexpected:
+            print(f"[load] pesos inesperados: {unexpected}")
+
         model.eval()
         cache[ck_idx] = model
         return model
