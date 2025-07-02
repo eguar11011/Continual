@@ -1,0 +1,13 @@
+config: finetune_cifar10_1cl.yml
+dataset: cifar10
+classes_per_task: 1
+backbone: resnet18
+strategy: finetune
+epochs: 30
+batch: 128
+buffer: 1000
+ewc: 10.0
+output: runs/finetune_clases-1_cifar10_epochs--30
+img_size: 224
+duracion_segundos: 3000.73
+duracion_hms: 0:50:00

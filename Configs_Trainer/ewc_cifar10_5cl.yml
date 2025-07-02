@@ -3,7 +3,7 @@ classes-per-task: 5
 strategy: ewc            # ← estrategia
 backbone: resnet18
 epochs: 30
-batch: 64
+batch: 128
 img-size: 224
 
 # hiperparámetros propios de EWC

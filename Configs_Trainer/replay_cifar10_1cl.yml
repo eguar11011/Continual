@@ -1,0 +1,10 @@
+dataset: cifar10          # Datas­­et base
+classes-per-task: 1       # 2 clases por tarea (2 tareas en CIFAR-10)
+strategy: replay          # ← estrategia
+backbone: resnet18
+epochs: 30
+batch: 128
+img-size: 224
+
+# hiperparámetros propios de Replay
+buffer: 8_000              # tamaño del buffer de memoria (ejemplo)

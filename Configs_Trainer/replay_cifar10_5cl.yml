@@ -3,8 +3,8 @@ classes-per-task: 5       # 5 clases por tarea (2 tareas en CIFAR-10)
 strategy: replay          # ← estrategia
 backbone: resnet18
 epochs: 30
-batch: 64
+batch: 128
 img-size: 224
 
 # hiperparámetros propios de Replay
-buffer: 2000              # tamaño del buffer de memoria (ejemplo)
+buffer: 8_000              # tamaño del buffer de memoria (ejemplo)
