@@ -1,83 +1,54 @@
 #!/usr/bin/env python3
-"""learner.py – Estrategias de Continual Learning y Fine‑Tune básico
+"""
+learner.py – Estrategias de Continual Learning
 
-Incluye tres modos listos para usar:
-
-* **FinetuneLearner** – entrenamiento secuencial *naïve* (baseline).  No buffer,
-  sin regularización: simplemente optimiza los parámetros con cada nueva tarea.
-
-* **ReplayLearner** – mezcla un búfer de ejemplos anteriores (reservoir sampling)
-  con el lote actual.
-
-* **EwcLearner** – añade la regularización de *Elastic Weight Consolidation*
-  (Fisher diagonal) para anclar los parámetros importantes de tareas pasadas.
+Modos incluidos
+───────────────
+* FinetuneLearner – entrenamiento secuencial naïve (sin mitigación).
+* ReplayLearner  – búfer balanceado por clase que crece por tarea.
+* EwcLearner     – Elastic Weight Consolidation + replay balanceado.
 
 Cada clase implementa:
-    * `observe(batch)` – paso de entrenamiento sobre un lote.
-    * `end_task(dataloader)` – hook opcional que se llama al terminar una tarea.
-
-Las tres comparten una interfaz uniforme para que `trainer.py` pueda cambiar de
-estrategia con una única línea.
-
-Bloque *smoke‑test* disponible:
-
-```bash
-# Fine‑tune naïve
-python learner.py --strategy finetune
-# Replay de 200 ejemplos
-python learner.py --strategy replay --buffer 200
-# EWC con λ=5
-python learner.py --strategy ewc --ewc 5
-```
+    • observe(batch)     – paso de entrenamiento.
+    • end_task(dataloader) – hook al terminar cada tarea.
 """
 from __future__ import annotations
 
 import argparse
 import random
 from collections import defaultdict
-from typing import Dict, List, Tuple
+from typing import DefaultDict, Dict, List, Tuple
 
 import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
 
-# ---------------------------------------------------------------------------
-# 0.  Utils comunes ----------------------------------------------------------
-# ---------------------------------------------------------------------------
-
+# ────────────────────────────────
+# 0. Utilidades comunes
+# ────────────────────────────────
 Criterion = nn.CrossEntropyLoss()
 
-
-def _reservoir_add(buffer: List[Tuple[torch.Tensor, torch.Tensor]], sample: Tuple[torch.Tensor, torch.Tensor], buf_size: int):
-    """Añade (x,y) al búfer con *reservoir sampling*."""
-    if len(buffer) < buf_size:
-        buffer.append(sample)
-    else:
-        j = random.randint(0, len(buffer) - 1)
-        if j < buf_size:
-            buffer[j] = sample
-
-
-def _sample_buffer(buffer: List[Tuple[torch.Tensor, torch.Tensor]], k: int, device: torch.device):
-    idx = random.sample(range(len(buffer)), min(k, len(buffer)))
-    xb, yb = zip(*[buffer[i] for i in idx])
-    return torch.stack(xb).to(device), torch.stack(yb).to(device)
-
-
-# ---------------------------------------------------------------------------
-# 1.  Fine‑Tune naïve --------------------------------------------------------
-# ---------------------------------------------------------------------------
+# ────────────────────────────────
+# 1. Finetune naïve
+# ────────────────────────────────
 class FinetuneLearner(nn.Module):
-    """Entrenamiento secuencial sin mitigación de olvido (baseline)."""
+    """Entrenamiento secuencial sin mitigación del olvido (baseline)."""
 
-    def __init__(self, model: nn.Module, lr: float = 1e-3, device: str | torch.device = "cuda", **_):
+    def __init__(
+        self,
+        model: nn.Module,
+        lr: float = 1e-3,
+        device: str | torch.device = "cuda",
+        **_,
+    ):
         super().__init__()
         self.model = model.to(device)
         self.device = device
+        self.lr = lr
         self.optim = optim.AdamW(self.model.parameters(), lr=lr)
         self.criterion = Criterion
-        self.lr = lr
 
+    # --------------------- entrenamiento por lote ---------------------
     def observe(self, batch: Tuple[torch.Tensor, torch.Tensor]):
         x, y = (b.to(self.device) for b in batch)
         logits = self.model(x)
@@ -87,20 +58,39 @@ class FinetuneLearner(nn.Module):
         self.optim.step()
         return loss.item()
 
-    def end_task(self, *_, **__):
-        return  # nada que hacer
-        # ------------------------------------------------------------
-    # ------------------------------------------------------------
+    # --------------------- gestión de nuevas clases -------------------
     def add_classes(self, n_new: int):
-        """Expande la cabeza y reinicia el optimizador con los nuevos parámetros."""
+        """
+        Expande la cabeza SIN reiniciar el optimizador.
+
+        • Detecta qué parámetros son “nuevos” tras llamar a
+          `model.add_classes(n_new)` y los añade como otro param-group
+          al AdamW que ya existe, conservando los estados de momento
+          del resto de pesos.
+        """
         if n_new <= 0:
             return
+
+        # 1) referencia a los parámetros actuales *antes* de crecer
+        old_param_ids = {id(p) for p in self.model.parameters()}
+
+        # 2) hace crecer la cabeza
         self.model.add_classes(n_new)
 
-        # ⚠️ Creamos un optimizador NUEVO que incluya los parámetros recién añadidos
-        self.optim = optim.AdamW(self.model.parameters(), lr=self.lr)
+        # 3) localiza los parámetros añadidos
+        new_params = [
+            p for p in self.model.parameters() if id(p) not in old_param_ids
+        ]
 
+        # 4) los incorpora al optimizador manteniendo su estado anterior
+        if new_params:  # evita error si n_new == 0
+            self.optim.add_param_group({"params": new_params})
 
+    # --------------------- hook fin de tarea --------------------------
+    def end_task(self, *_):
+        pass  # no hace nada
+
+    # --------------------- evaluación rápida --------------------------
     @torch.no_grad()
     def evaluate(self, loader: DataLoader):
         self.model.eval()
@@ -113,35 +103,90 @@ class FinetuneLearner(nn.Module):
         return correct / total if total else 0.0
 
 
-# ---------------------------------------------------------------------------
-# 2.  ReplayLearner ----------------------------------------------------------
-# ---------------------------------------------------------------------------
+# ────────────────────────────────
+# 2. Replay balanceado
+# ────────────────────────────────
 class ReplayLearner(FinetuneLearner):
-    """Añade un buffer de *rehearsal* que se mezcla con el input corriente."""
+    """
+    Búfer balanceado por clase.
+
+    buffer: dict  cls_id → list[(x_cpu, y_cpu)]
+    Cada clase mantiene ≤ slots_per_class elementos.
+    """
 
     def __init__(self, model: nn.Module, buffer_size: int = 1000, **kw):
         super().__init__(model, **kw)
-        self.buffer: List[Tuple[torch.Tensor, torch.Tensor]] = []
+        self.buffer: DefaultDict[int, List[Tuple[torch.Tensor, torch.Tensor]]] = (
+            defaultdict(list)
+        )
         self.buffer_size = buffer_size
+        self.slots_per_class = 0  # se calcula tras cada tarea
 
+    # --------------------- entrenamiento por lote ---------------------
     def observe(self, batch):
         x, y = batch
         x, y = x.to(self.device), y.to(self.device)
-        if self.buffer:
-            xb, yb = _sample_buffer(self.buffer, len(x) // 2, self.device)
+
+        # mezcla con replay
+        if any(self.buffer.values()):
+            xb, yb = self._sample_replay(len(x) // 2)
             x = torch.cat([x, xb])
             y = torch.cat([y, yb])
-        loss = super().observe((x, y))
-        for xi, yi in zip(x.detach().cpu(), y.detach().cpu()):
-            _reservoir_add(self.buffer, (xi, yi), self.buffer_size)
-        return loss
+
+        return super().observe((x, y))
+
+    # --------------------- muestreo balanceado ------------------------
+    def _sample_replay(self, n: int):
+        """Devuelve ≤ n ejemplos balanceados entre clases."""
+        classes = [c for c, samples in self.buffer.items() if samples]
+        per_cls = max(1, n // max(1, len(classes)))
+
+        chosen: List[Tuple[torch.Tensor, torch.Tensor]] = []
+        for c in classes:
+            k = min(per_cls, len(self.buffer[c]))
+            chosen.extend(random.sample(self.buffer[c], k))
+
+        # completa si faltan
+        if len(chosen) < n:
+            flat = [s for lst in self.buffer.values() for s in lst]
+            chosen.extend(random.sample(flat, n - len(chosen)))
+
+        xb, yb = zip(*chosen)
+        return torch.stack(xb).to(self.device), torch.stack(yb).to(self.device)
+
+    # --------------------- hook fin de tarea --------------------------
+    @torch.no_grad()
+    def end_task(self, dataloader: DataLoader, *_, **__):
+        """Al cerrar una tarea, actualiza el búfer balanceado."""
+        total_classes = self.model.head.out_features
+        self.slots_per_class = max(1, self.buffer_size // total_classes)
+
+        # recorta clases antiguas si sobran
+        for c in list(self.buffer.keys()):
+            if len(self.buffer[c]) > self.slots_per_class:
+                self.buffer[c] = random.sample(self.buffer[c], self.slots_per_class)
+
+        # recolecta nuevos ejemplos
+        candidates: DefaultDict[int, List[Tuple[torch.Tensor, torch.Tensor]]] = (
+            defaultdict(list)
+        )
+        for x, y in dataloader:
+            for xi, yi in zip(x, y):
+                c = yi.item()
+                if len(candidates[c]) < self.slots_per_class:
+                    candidates[c].append((xi.cpu(), yi.cpu()))
+        # fusiona
+        for c, lst in candidates.items():
+            self.buffer[c].extend(lst)
+            if len(self.buffer[c]) > self.slots_per_class:
+                self.buffer[c] = random.sample(self.buffer[c], self.slots_per_class)
 
 
-# ---------------------------------------------------------------------------
-# 3.  EwcLearner -------------------------------------------------------------
-# ---------------------------------------------------------------------------
+# ────────────────────────────────
+# 3. EWC + Replay
+# ────────────────────────────────
 class EwcLearner(ReplayLearner):
-    """Añade regularización EWC tras cada tarea (usa buffer opcional)."""
+    """Elastic Weight Consolidation + búfer replay balanceado."""
 
     def __init__(self, model: nn.Module, ewc_lambda: float = 10.0, **kw):
         super().__init__(model, **kw)
@@ -149,79 +194,82 @@ class EwcLearner(ReplayLearner):
         self.prev_params: Dict[str, torch.Tensor] = {}
         self.fisher: Dict[str, torch.Tensor] = {}
 
+    # --------------------- entrenamiento por lote ---------------------
     def observe(self, batch):
-        loss = super().observe(batch)  # forward + replay + grad
+        loss = super().observe(batch)  # incluye replay
         if self.ewc_lambda > 0 and self.fisher:
-            ewc_penalty = 0.0
+            penalty = 0.0
             for n, p in self.model.named_parameters():
                 if n in self.fisher:
-                    ewc_penalty += (self.fisher[n] * (p - self.prev_params[n]).pow(2)).sum()
-            add = self.ewc_lambda * ewc_penalty
+                    penalty += (self.fisher[n] * (p - self.prev_params[n]).pow(2)).sum()
+            add = self.ewc_lambda * penalty
             self.optim.zero_grad()
             add.backward()
             self.optim.step()
             loss += add.item()
         return loss
 
-#    @torch.no_grad()
+    # --------------------- hook fin de tarea --------------------------
+    @torch.no_grad()
     def end_task(self, dataloader: DataLoader, fisher_samples: int = 1024):
-        self.prev_params = {n: p.clone().detach() for n, p in self.model.named_parameters()}
+        # guarda parámetros
+        self.prev_params = {
+            n: p.clone().detach() for n, p in self.model.named_parameters()
+        }
         self.fisher = {}
         self.model.eval()
 
+        # estima Fisher diagonal
         cnt = 0
         for x, y in dataloader:
             x, y = x.to(self.device), y.to(self.device)
-            self.model.zero_grad(set_to_none=True)  # opcional pero más rápido
-            loss = Criterion(self.model(x), y)
-            loss.backward()
+            self.model.zero_grad(set_to_none=True)
+            Criterion(self.model(x), y).backward()
 
             for n, p in self.model.named_parameters():
-                if p.grad is None:
-                    continue
-                # ---------- inicialización segura ----------
-                if n not in self.fisher:
-                    self.fisher[n] = torch.zeros_like(p.grad)
-                self.fisher[n] += p.grad.pow(2)
-                # -------------------------------------------
-
+                if p.grad is not None:
+                    self.fisher.setdefault(n, torch.zeros_like(p.grad))
+                    self.fisher[n] += p.grad.pow(2)
             cnt += 1
             if cnt * x.size(0) >= fisher_samples:
                 break
-
-        # normaliza por número de muestras (o por cnt · batch, si prefieres)
         for n in self.fisher:
             self.fisher[n] /= cnt
 
+        # actualiza buffer balanceado
+        super().end_task(dataloader)
 
 
-# ---------------------------------------------------------------------------
-# 4.  Factory helper ---------------------------------------------------------
-# ---------------------------------------------------------------------------
-
+# ────────────────────────────────
+# 4. Factory helper
+# ────────────────────────────────
 def build_learner(strategy: str, model: nn.Module, **kw):
     strategy = strategy.lower()
     if strategy == "finetune":
         return FinetuneLearner(model, **kw)
-    elif strategy == "replay":
+    if strategy == "replay":
         return ReplayLearner(model, **kw)
-    elif strategy == "ewc":
+    if strategy == "ewc":
         return EwcLearner(model, **kw)
-    else:
-        raise ValueError(f"Estrategia desconocida: {strategy}")
+    raise ValueError(f"Estrategia desconocida: {strategy}")
 
 
-# ---------------------------------------------------------------------------
-# 5.  Smoke‑test -------------------------------------------------------------
-# ---------------------------------------------------------------------------
-
+# ────────────────────────────────
+# 5. Smoke-test
+# ────────────────────────────────
 def _smoke_test(args):
     torch.manual_seed(0)
     from models import get_backbone, Classifier
 
     backbone = get_backbone(args.backbone)
     model = Classifier(backbone, num_classes=args.nc)
-    learner = build_learner(args.strategy, model, buffer_size=args.buffer, ewc_lambda=args.ewc, lr=1e-3)
+    learner = build_learner(
+        args.strategy,
+        model,
+        buffer_size=args.buffer,
+        ewc_lambda=args.ewc,
+        lr=1e-3,
+    )
 
     def make_loader(cls_offset: int):
         x = torch.randn(256, 3, args.img, args.img)
@@ -235,7 +283,7 @@ def _smoke_test(args):
             losses = [learner.observe(batch) for batch in loader]
             print(f"  epoch={epoch}  loss={sum(losses)/len(losses):.4f}")
         learner.end_task(loader)
-    print("Smoke‑test OK ✅")
+    print("Smoke-test OK ✅")
 
 
 def _parse_args():
