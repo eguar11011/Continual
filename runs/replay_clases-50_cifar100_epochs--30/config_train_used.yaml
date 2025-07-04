@@ -1,0 +1,13 @@
+config: replay_cifar100_50cl.yml
+dataset: cifar100
+classes_per_task: 50
+backbone: resnet18
+strategy: replay
+epochs: 30
+batch: 256
+buffer: 8000
+ewc: 10.0
+output: runs/replay_clases-50_cifar100_epochs--30
+img_size: 224
+duracion_segundos: 3152.79
+duracion_hms: 0:52:32

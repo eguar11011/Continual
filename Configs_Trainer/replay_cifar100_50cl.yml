@@ -1,0 +1,9 @@
+dataset: cifar100          
+classes-per-task: 50       
+strategy: replay        # estrategia de entrenamiento continuo
+backbone: resnet18        # red base; puedes cambiarla si quieres
+epochs: 30                 # número de épocas por tarea
+batch: 256                 # tamaño de lote
+img-size: 224             # se redimensionan las imágenes para backbones ImageNet
+# output se deja vacío para que el script lo genere como
+buffer: 8_000              # tamaño del buffer de memoria (ejemplo)
