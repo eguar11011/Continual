@@ -3,7 +3,7 @@ import glob
 import os
 
 # Buscar todos los archivos con el patrón
-json_files = sorted(glob.glob("sim_ck9_t*_vs_ck9_t*.json"))
+json_files = sorted(glob.glob("sim_ck4_t*_vs_ck4_t*.json"))
 
 print(f"🔍 Se encontraron {len(json_files)} archivos JSON.")
 
@@ -23,7 +23,7 @@ for filename in json_files:
             print(f"❌ Error de formato en {filename}. Se omite.")
 
 # Guardar en archivo combinado
-output_filename = "merged_similarity_ck9.json"
+output_filename = "merged_similarity_ck4.json"
 with open(output_filename, "w") as out_file:
     json.dump(merged_data, out_file, indent=2)
 

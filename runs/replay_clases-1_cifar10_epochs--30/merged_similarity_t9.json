@@ -1,0 +1,632 @@
+[
+  {
+    "file": "sim_ck0_t9_vs_ck1_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8649792671203613,
+        "backbone.bn1": 0.8489203453063965,
+        "backbone.layer1.1": 0.3166680812835694,
+        "backbone.layer2.1": 0.151885724067688,
+        "backbone.layer3.1": 0.0915748655796051,
+        "backbone.layer4.1": 0.04036504030227661
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t9_vs_ck2_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8649782180786133,
+        "backbone.bn1": 0.8489195823669434,
+        "backbone.layer1.1": 0.3004807949066162,
+        "backbone.layer2.1": 0.15174891948699953,
+        "backbone.layer3.1": 0.09158414006233216,
+        "backbone.layer4.1": 0.04036504030227661
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t9_vs_ck3_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8649786949157715,
+        "backbone.bn1": 0.8489201545715332,
+        "backbone.layer1.1": 0.3003443241119385,
+        "backbone.layer2.1": 0.15981836318969728,
+        "backbone.layer3.1": 0.0915846586227417,
+        "backbone.layer4.1": 0.04036504030227661
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t9_vs_ck4_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8649796485900879,
+        "backbone.bn1": 0.84891996383667,
+        "backbone.layer1.1": 0.30208461284637456,
+        "backbone.layer2.1": 0.15138328075408936,
+        "backbone.layer3.1": 0.09164747595787048,
+        "backbone.layer4.1": 0.04036504030227661
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t9_vs_ck5_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8649798393249513,
+        "backbone.bn1": 0.8489205360412598,
+        "backbone.layer1.1": 0.30091679096221924,
+        "backbone.layer2.1": 0.1634554386138916,
+        "backbone.layer3.1": 0.0916972577571869,
+        "backbone.layer4.1": 0.04036504030227661
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t9_vs_ck6_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8649794578552247,
+        "backbone.bn1": 0.8489195823669434,
+        "backbone.layer1.1": 0.31391911506652836,
+        "backbone.layer2.1": 0.157624089717865,
+        "backbone.layer3.1": 0.09179561734199525,
+        "backbone.layer4.1": 0.04036504030227661
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t9_vs_ck7_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8649794578552247,
+        "backbone.bn1": 0.8489205360412598,
+        "backbone.layer1.1": 0.2856770515441895,
+        "backbone.layer2.1": 0.16998633146286013,
+        "backbone.layer3.1": 0.09187759160995485,
+        "backbone.layer4.1": 0.04036504030227661
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t9_vs_ck8_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8649796485900879,
+        "backbone.bn1": 0.8489209175109864,
+        "backbone.layer1.1": 0.30687401294708255,
+        "backbone.layer2.1": 0.162335479259491,
+        "backbone.layer3.1": 0.09201590418815614,
+        "backbone.layer4.1": 0.04036504030227661
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t9_vs_ck9_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8649794578552247,
+        "backbone.bn1": 0.8489205360412598,
+        "backbone.layer1.1": 0.3066410541534424,
+        "backbone.layer2.1": 0.1603403091430664,
+        "backbone.layer3.1": 0.09216427206993104,
+        "backbone.layer4.1": 0.04036504030227661
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t9_vs_ck2_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 1.000000286102295,
+        "backbone.layer1.1": 0.9054073333740235,
+        "backbone.layer2.1": 0.9172381401062012,
+        "backbone.layer3.1": 0.9998624801635743,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t9_vs_ck3_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9154899597167969,
+        "backbone.layer2.1": 0.907436752319336,
+        "backbone.layer3.1": 0.9994550704956056,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t9_vs_ck4_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.000000286102295,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9149192810058594,
+        "backbone.layer2.1": 0.9133170127868653,
+        "backbone.layer3.1": 0.9987823486328126,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t9_vs_ck5_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.000000286102295,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9094361305236817,
+        "backbone.layer2.1": 0.8933900833129883,
+        "backbone.layer3.1": 0.9978497505187989,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t9_vs_ck6_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0000004768371582,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.8873435974121094,
+        "backbone.layer2.1": 0.8760223388671875,
+        "backbone.layer3.1": 0.9966703414916993,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t9_vs_ck7_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.8751639366149903,
+        "backbone.layer2.1": 0.8823051452636719,
+        "backbone.layer3.1": 0.9952121734619142,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t9_vs_ck8_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.901400375366211,
+        "backbone.layer2.1": 0.8588251113891602,
+        "backbone.layer3.1": 0.9935089111328126,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t9_vs_ck9_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.892640781402588,
+        "backbone.layer2.1": 0.8643714904785157,
+        "backbone.layer3.1": 0.9914568901062012,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t9_vs_ck3_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 1.000000286102295,
+        "backbone.layer1.1": 0.9748546600341798,
+        "backbone.layer2.1": 0.904399299621582,
+        "backbone.layer3.1": 0.9998605728149415,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t9_vs_ck4_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 1.000000286102295,
+        "backbone.layer1.1": 0.9549699783325196,
+        "backbone.layer2.1": 0.932047176361084,
+        "backbone.layer3.1": 0.9994495391845704,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t9_vs_ck5_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 1.000000286102295,
+        "backbone.layer1.1": 0.9155123710632325,
+        "backbone.layer2.1": 0.8752273559570313,
+        "backbone.layer3.1": 0.9987706184387207,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t9_vs_ck6_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.000000286102295,
+        "backbone.bn1": 1.000000286102295,
+        "backbone.layer1.1": 0.9265218734741212,
+        "backbone.layer2.1": 0.8764755249023438,
+        "backbone.layer3.1": 0.99783353805542,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t9_vs_ck7_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 1.000000286102295,
+        "backbone.layer1.1": 0.9166318893432618,
+        "backbone.layer2.1": 0.8636232376098634,
+        "backbone.layer3.1": 0.9966133117675782,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t9_vs_ck8_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.9152632713317872,
+        "backbone.layer2.1": 0.8826489448547363,
+        "backbone.layer3.1": 0.9951332092285157,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t9_vs_ck9_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 1.000000286102295,
+        "backbone.layer1.1": 0.9202465057373047,
+        "backbone.layer2.1": 0.8701255798339844,
+        "backbone.layer3.1": 0.9933046340942383,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck3_t9_vs_ck4_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9626121520996094,
+        "backbone.layer2.1": 0.9047713279724121,
+        "backbone.layer3.1": 0.99985990524292,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck3_t9_vs_ck5_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.9396889686584473,
+        "backbone.layer2.1": 0.8662027359008789,
+        "backbone.layer3.1": 0.9994469642639161,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck3_t9_vs_ck6_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.000000286102295,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.935488224029541,
+        "backbone.layer2.1": 0.8683253288269044,
+        "backbone.layer3.1": 0.9987690925598145,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck3_t9_vs_ck7_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9192116737365723,
+        "backbone.layer2.1": 0.8745936393737793,
+        "backbone.layer3.1": 0.997806739807129,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck3_t9_vs_ck8_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.938447666168213,
+        "backbone.layer2.1": 0.8814684867858887,
+        "backbone.layer3.1": 0.9965720176696777,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck3_t9_vs_ck9_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9402152061462403,
+        "backbone.layer2.1": 0.8372897148132324,
+        "backbone.layer3.1": 0.9949926376342774,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t9_vs_ck5_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0000004768371582,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.9440267562866211,
+        "backbone.layer2.1": 0.8714407920837403,
+        "backbone.layer3.1": 0.9998616218566895,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t9_vs_ck6_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0000004768371582,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.9586505889892578,
+        "backbone.layer2.1": 0.9046611785888672,
+        "backbone.layer3.1": 0.9994542121887208,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t9_vs_ck7_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.933531665802002,
+        "backbone.layer2.1": 0.8843941688537598,
+        "backbone.layer3.1": 0.9987625122070313,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t9_vs_ck8_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9324751853942872,
+        "backbone.layer2.1": 0.8926012992858887,
+        "backbone.layer3.1": 0.997789478302002,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t9_vs_ck9_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9351545333862306,
+        "backbone.layer2.1": 0.8545265197753906,
+        "backbone.layer3.1": 0.9964762687683106,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck5_t9_vs_ck6_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0000004768371582,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.9425494194030762,
+        "backbone.layer2.1": 0.8931764602661133,
+        "backbone.layer3.1": 0.9998624801635743,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck5_t9_vs_ck7_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9259361267089844,
+        "backbone.layer2.1": 0.9333334922790528,
+        "backbone.layer3.1": 0.9994445800781251,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck5_t9_vs_ck8_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9344720840454102,
+        "backbone.layer2.1": 0.8952342987060548,
+        "backbone.layer3.1": 0.9987390518188477,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck5_t9_vs_ck9_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.0,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9301552772521973,
+        "backbone.layer2.1": 0.909788990020752,
+        "backbone.layer3.1": 0.9976984977722169,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck6_t9_vs_ck7_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.000000286102295,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.9143295288085938,
+        "backbone.layer2.1": 0.925674057006836,
+        "backbone.layer3.1": 0.9998576164245606,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck6_t9_vs_ck8_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.9405048370361329,
+        "backbone.layer2.1": 0.9065884590148926,
+        "backbone.layer3.1": 0.9994275093078614,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck6_t9_vs_ck9_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 1.000000286102295,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.9507131576538086,
+        "backbone.layer2.1": 0.8982198715209961,
+        "backbone.layer3.1": 0.998668098449707,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck7_t9_vs_ck8_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999996185302735,
+        "backbone.bn1": 1.0,
+        "backbone.layer1.1": 0.9153864860534668,
+        "backbone.layer2.1": 0.9180944442749024,
+        "backbone.layer3.1": 0.999852466583252,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck7_t9_vs_ck9_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9115277290344239,
+        "backbone.layer2.1": 0.9154887199401855,
+        "backbone.layer3.1": 0.9993859291076661,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  },
+  {
+    "file": "sim_ck8_t9_vs_ck9_t9.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9999998092651368,
+        "backbone.bn1": 0.9999998092651368,
+        "backbone.layer1.1": 0.9401494026184083,
+        "backbone.layer2.1": 0.9033199310302735,
+        "backbone.layer3.1": 0.9998362541198731,
+        "backbone.layer4.1": 1.0
+      }
+    }
+  }
+]

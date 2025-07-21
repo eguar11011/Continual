@@ -1,0 +1,142 @@
+[
+  {
+    "file": "sim_ck4_t0_vs_ck4_t1.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8341058731079102,
+        "backbone.bn1": 0.8428775787353516,
+        "backbone.layer1.1": 0.6672011375427247,
+        "backbone.layer2.1": 0.6024280548095704,
+        "backbone.layer3.1": 0.7896380424499512,
+        "backbone.layer4.1": 0.8030838966369629
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t0_vs_ck4_t2.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8788484573364258,
+        "backbone.bn1": 0.8785202026367188,
+        "backbone.layer1.1": 0.6077367305755615,
+        "backbone.layer2.1": 0.6467430591583252,
+        "backbone.layer3.1": 0.7669602394104005,
+        "backbone.layer4.1": 0.8439557075500489
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t0_vs_ck4_t3.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8343916893005372,
+        "backbone.bn1": 0.8345044136047364,
+        "backbone.layer1.1": 0.6695451259613038,
+        "backbone.layer2.1": 0.6438508987426759,
+        "backbone.layer3.1": 0.6263315200805665,
+        "backbone.layer4.1": 0.775497055053711
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t0_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9130266189575196,
+        "backbone.bn1": 0.9337041854858399,
+        "backbone.layer1.1": 0.836036491394043,
+        "backbone.layer2.1": 0.6928514003753663,
+        "backbone.layer3.1": 0.8021321296691895,
+        "backbone.layer4.1": 0.8178937911987305
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t1_vs_ck4_t2.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8501387596130372,
+        "backbone.bn1": 0.845974349975586,
+        "backbone.layer1.1": 0.6003174781799316,
+        "backbone.layer2.1": 0.6749728679656983,
+        "backbone.layer3.1": 0.7593245506286621,
+        "backbone.layer4.1": 0.8789484024047852
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t1_vs_ck4_t3.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9041189193725586,
+        "backbone.bn1": 0.9018118858337403,
+        "backbone.layer1.1": 0.7554401397705078,
+        "backbone.layer2.1": 0.7381368637084962,
+        "backbone.layer3.1": 0.6200305938720704,
+        "backbone.layer4.1": 0.7980904579162598
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t1_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8434332847595215,
+        "backbone.bn1": 0.8503430366516114,
+        "backbone.layer1.1": 0.6680331707000733,
+        "backbone.layer2.1": 0.5878718376159668,
+        "backbone.layer3.1": 0.7996670246124268,
+        "backbone.layer4.1": 0.8166172027587891
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t2_vs_ck4_t3.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8638874053955079,
+        "backbone.bn1": 0.8735555648803711,
+        "backbone.layer1.1": 0.6251482963562012,
+        "backbone.layer2.1": 0.6194292068481446,
+        "backbone.layer3.1": 0.7204473972320558,
+        "backbone.layer4.1": 0.8651787757873536
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t2_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8971420288085938,
+        "backbone.bn1": 0.9002028465270997,
+        "backbone.layer1.1": 0.5794898509979248,
+        "backbone.layer2.1": 0.5901510715484619,
+        "backbone.layer3.1": 0.8188621520996094,
+        "backbone.layer4.1": 0.8102328300476075
+      }
+    }
+  },
+  {
+    "file": "sim_ck4_t3_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8340930938720703,
+        "backbone.bn1": 0.8471888542175293,
+        "backbone.layer1.1": 0.6578513622283936,
+        "backbone.layer2.1": 0.5998705863952637,
+        "backbone.layer3.1": 0.6963709354400636,
+        "backbone.layer4.1": 0.7565798282623292
+      }
+    }
+  }
+]

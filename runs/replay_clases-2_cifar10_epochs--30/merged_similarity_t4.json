@@ -1,0 +1,142 @@
+[
+  {
+    "file": "sim_ck0_t4_vs_ck1_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.851509952545166,
+        "backbone.bn1": 0.8487483978271485,
+        "backbone.layer1.1": 0.3082754611968994,
+        "backbone.layer2.1": 0.16725250482559206,
+        "backbone.layer3.1": 0.12358043193817139,
+        "backbone.layer4.1": 0.05938521623611451
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t4_vs_ck2_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8213346481323243,
+        "backbone.bn1": 0.8162747383117677,
+        "backbone.layer1.1": 0.2997974157333374,
+        "backbone.layer2.1": 0.17437897920608522,
+        "backbone.layer3.1": 0.12453964948654175,
+        "backbone.layer4.1": 0.05951346158981324
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t4_vs_ck3_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.7923851966857911,
+        "backbone.bn1": 0.7912804126739502,
+        "backbone.layer1.1": 0.2859947443008423,
+        "backbone.layer2.1": 0.169246780872345,
+        "backbone.layer3.1": 0.12814817428588868,
+        "backbone.layer4.1": 0.0628973364830017
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t4_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.7878417015075684,
+        "backbone.bn1": 0.782732105255127,
+        "backbone.layer1.1": 0.32688670158386235,
+        "backbone.layer2.1": 0.17874467372894287,
+        "backbone.layer3.1": 0.10707930326461793,
+        "backbone.layer4.1": 0.06012794375419617
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t4_vs_ck2_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9766908645629884,
+        "backbone.bn1": 0.9752467155456543,
+        "backbone.layer1.1": 0.807836151123047,
+        "backbone.layer2.1": 0.9573660850524903,
+        "backbone.layer3.1": 0.6808543682098389,
+        "backbone.layer4.1": 0.5857357501983643
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t4_vs_ck3_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.939964771270752,
+        "backbone.bn1": 0.946267032623291,
+        "backbone.layer1.1": 0.7616525173187256,
+        "backbone.layer2.1": 0.9557147026062012,
+        "backbone.layer3.1": 0.5631830215454102,
+        "backbone.layer4.1": 0.4325762271881104
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t4_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9216823577880859,
+        "backbone.bn1": 0.9238254547119141,
+        "backbone.layer1.1": 0.7644302845001221,
+        "backbone.layer2.1": 0.8048041343688965,
+        "backbone.layer3.1": 0.3318164348602295,
+        "backbone.layer4.1": 0.2011723041534424
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t4_vs_ck3_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9734106063842773,
+        "backbone.bn1": 0.9819003105163575,
+        "backbone.layer1.1": 0.9157288551330567,
+        "backbone.layer2.1": 0.966009521484375,
+        "backbone.layer3.1": 0.7613420486450195,
+        "backbone.layer4.1": 0.5698944568634033
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t4_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9533420562744142,
+        "backbone.bn1": 0.9556294441223145,
+        "backbone.layer1.1": 0.7236717700958253,
+        "backbone.layer2.1": 0.817332649230957,
+        "backbone.layer3.1": 0.40291819572448734,
+        "backbone.layer4.1": 0.23763799667358398
+      }
+    }
+  },
+  {
+    "file": "sim_ck3_t4_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9678718566894532,
+        "backbone.bn1": 0.9714735984802246,
+        "backbone.layer1.1": 0.6886621952056885,
+        "backbone.layer2.1": 0.8320697784423828,
+        "backbone.layer3.1": 0.46891179084777834,
+        "backbone.layer4.1": 0.3231350660324097
+      }
+    }
+  }
+]

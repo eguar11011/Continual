@@ -1,0 +1,142 @@
+[
+  {
+    "file": "sim_ck0_t4_vs_ck1_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9164295196533203,
+        "backbone.bn1": 0.9082178115844727,
+        "backbone.layer1.1": 0.3183711290359497,
+        "backbone.layer2.1": 0.16295021772384644,
+        "backbone.layer3.1": 0.10976200103759766,
+        "backbone.layer4.1": 0.04927712976932526
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t4_vs_ck2_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8810765266418458,
+        "backbone.bn1": 0.8582283973693848,
+        "backbone.layer1.1": 0.3314903259277344,
+        "backbone.layer2.1": 0.17088805437088014,
+        "backbone.layer3.1": 0.09638497233390808,
+        "backbone.layer4.1": 0.06534962058067321
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t4_vs_ck3_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8209168434143067,
+        "backbone.bn1": 0.8143394470214844,
+        "backbone.layer1.1": 0.31194233894348145,
+        "backbone.layer2.1": 0.18030725717544557,
+        "backbone.layer3.1": 0.0896705210208893,
+        "backbone.layer4.1": 0.06315504908561707
+      }
+    }
+  },
+  {
+    "file": "sim_ck0_t4_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.7964262008666992,
+        "backbone.bn1": 0.7962150573730469,
+        "backbone.layer1.1": 0.28975701332092285,
+        "backbone.layer2.1": 0.15620437860488892,
+        "backbone.layer3.1": 0.08269975185394288,
+        "backbone.layer4.1": 0.05401067733764649
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t4_vs_ck2_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9645911216735841,
+        "backbone.bn1": 0.9216898918151856,
+        "backbone.layer1.1": 0.6986477851867676,
+        "backbone.layer2.1": 0.5893065452575684,
+        "backbone.layer3.1": 0.3325626134872437,
+        "backbone.layer4.1": 0.27631187438964844
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t4_vs_ck3_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8992210388183595,
+        "backbone.bn1": 0.8916518211364747,
+        "backbone.layer1.1": 0.4464237213134766,
+        "backbone.layer2.1": 0.3419206619262696,
+        "backbone.layer3.1": 0.09347814321517944,
+        "backbone.layer4.1": 0.13780230283737183
+      }
+    }
+  },
+  {
+    "file": "sim_ck1_t4_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8634555816650391,
+        "backbone.bn1": 0.8629675865173341,
+        "backbone.layer1.1": 0.5526906013488769,
+        "backbone.layer2.1": 0.33079490661621097,
+        "backbone.layer3.1": 0.13184709548950196,
+        "backbone.layer4.1": 0.13874785900115968
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t4_vs_ck3_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9369243621826172,
+        "backbone.bn1": 0.9536128044128418,
+        "backbone.layer1.1": 0.5585172176361084,
+        "backbone.layer2.1": 0.439216947555542,
+        "backbone.layer3.1": 0.18717423677444459,
+        "backbone.layer4.1": 0.08184800744056703
+      }
+    }
+  },
+  {
+    "file": "sim_ck2_t4_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.8927769660949707,
+        "backbone.bn1": 0.8667772293090821,
+        "backbone.layer1.1": 0.5844344139099121,
+        "backbone.layer2.1": 0.37222862243652344,
+        "backbone.layer3.1": 0.19811692237854006,
+        "backbone.layer4.1": 0.2119326114654541
+      }
+    }
+  },
+  {
+    "file": "sim_ck3_t4_vs_ck4_t4.json",
+    "data": {
+      "k": 20,
+      "layers": {
+        "backbone.conv1": 0.9090815544128419,
+        "backbone.bn1": 0.9042147636413574,
+        "backbone.layer1.1": 0.5836848258972168,
+        "backbone.layer2.1": 0.4138002395629883,
+        "backbone.layer3.1": 0.2391072750091553,
+        "backbone.layer4.1": 0.11871588230133057
+      }
+    }
+  }
+]
