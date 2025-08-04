@@ -1,0 +1,12 @@
+{
+  "experiments": [
+    {
+      "method": "runs/finetune_clases-5_cifar10_epochs--30",
+      "model_task": 0,
+      "eval_task": 1,
+      "head_task": 1,
+      "accuracy": 0.0882,
+      "confusion_csv": "runs/finetune_clases-5_cifar10_epochs--30/confmat_model0_on_task1_head1.csv"
+    }
+  ]
+}
