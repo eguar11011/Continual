@@ -1,4 +1,4 @@
 experiments:
-  - method: runs/finetune_clases-5_cifar10_epochs--30
+  - method: runs/replay_clases-5_cifar10_epochs--30
     triples:
-      - [0, 1, 1]   # modelo de T0, evalúa T0, cabeza tomada de T1
+      - [0, 0, 1]   # modelo de T0, evalúa T0, cabeza tomada de T1
